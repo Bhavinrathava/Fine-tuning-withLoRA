@@ -62,7 +62,7 @@ def tokenize_dataset(dataset_path, tokenizer, max_length=128):
 
 
 
-def finetune(dataset, enableLoRA = False):
+def finetune(dataset_path, enableLoRA = False):
     '''
     dataset -> 2 columns -> input and output columns
 
@@ -74,10 +74,10 @@ def finetune(dataset, enableLoRA = False):
     '''
 
     # Step 1: Load the untrained model
-    tokenizer, model = load_model_and_tokenizer("deepseek-ai/DeepSeek-R1")
+    tokenizer, model = load_model_and_tokenizer("mistralai/Mistral-7B-Instruct-v0.3")
 
     # Step 2: Tokenize the dataset using the separate function
-    tokenized_dataset = tokenize_dataset(dataset, tokenizer)
+    tokenized_dataset = tokenize_dataset(dataset_path, tokenizer)
 
     # Step 3: Define training arguments
     training_args = TrainingArguments(
@@ -110,8 +110,6 @@ def finetune(dataset, enableLoRA = False):
    
 
 
-dataset_file ="Data/processed_dataset.csv"
-
-dataset = pd.read_csv(dataset_file)
-finetune(dataset)
+dataset_file = "Data/processed_dataset.csv" 
+finetune(dataset_file)
 
