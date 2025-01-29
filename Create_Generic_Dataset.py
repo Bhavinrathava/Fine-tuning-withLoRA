@@ -108,11 +108,6 @@ def generate_dataset():
 
     dataset = pd.DataFrame(dataset)
 
-    # Save the dataset to a new file
-    dataset_location = 'Data/ProcessedDataset.csv'
-    dataset.to_csv(dataset_location, index=False)
-
-    print("Dataset generated and saved.")
     # Clean up the checkpoint file once done
     if os.path.exists(checkpoint_file):
         os.remove(checkpoint_file)
