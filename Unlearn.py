@@ -16,8 +16,10 @@ def load_model_and_tokenizer(model_path):
     Returns:
         tuple: (tokenizer, model) objects.
     """
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path)
+    access_token = ""
+    tokenizer = AutoTokenizer.from_pretrained(model_path, token = access_token)
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model = AutoModelForCausalLM.from_pretrained(model_path, token = access_token)
     return tokenizer, model
 
 
@@ -110,6 +112,6 @@ def finetune(dataset_path, enableLoRA = False):
    
 
 
-dataset_file = "Data/processed_dataset.csv" 
+dataset_file = "Fine-tuning-withLoRA/Data/processed_dataset.csv" 
 finetune(dataset_file)
 
