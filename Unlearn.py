@@ -4,7 +4,10 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForCausalLM, TrainingArguments, Trainer
 from transformers import pipeline
 # from peft import LoraConfig, get_peft_model
+from peft import LoraConfig, TaskType
+from peft import get_peft_model
 
+peft_config = LoraConfig(task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=4, lora_alpha=32, lora_dropout=0.1)
 
 def load_model_and_tokenizer(model_path):
     """
@@ -77,18 +80,18 @@ def finetune(dataset_path, enableLoRA = False):
 
     # Step 1: Load the untrained model
     tokenizer, model = load_model_and_tokenizer("mistralai/Mistral-7B-Instruct-v0.3")
-
+    model = get_peft_model(model, peft_config)
     # Step 2: Tokenize the dataset using the separate function
     tokenized_dataset = tokenize_dataset(dataset_path, tokenizer)
 
     # Step 3: Define training arguments
     training_args = TrainingArguments(
         output_dir="./Model/Finetuned",
-        per_device_train_batch_size=4,  
+        per_device_train_batch_size=1,  
         num_train_epochs=3,  
         logging_dir="./logs", 
         save_steps=500,  # Save checkpoints every 500 steps
-        evaluation_strategy="epoch",  # Evaluate the model at the end of each epoch
+        evaluation_strategy="no",  # Evaluate the model at the end of each epoch
         learning_rate=5e-5, 
         save_total_limit=2,  # Keep only the last 2 checkpoints
     )
@@ -112,6 +115,6 @@ def finetune(dataset_path, enableLoRA = False):
    
 
 
-dataset_file = "Fine-tuning-withLoRA/Data/processed_dataset.csv" 
+dataset_file = "Data/processed_dataset.csv" 
 finetune(dataset_file)
 
